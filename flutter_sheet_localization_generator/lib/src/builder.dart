@@ -43,7 +43,7 @@ class DartBuilder {
     );
 
     constructor.initializers.add(
-      Code('labels = languages[locale]'),
+      Code('labels = languages[locale]!'),
     );
 
     result.fields.add(
@@ -76,7 +76,7 @@ class DartBuilder {
           ..static = true
           ..returns = refer(localizations.normalizedName)
           ..body = Code(
-            'Localizations.of<${localizations.name}>(context, ${localizations.name})?.labels',
+            'Localizations.of<${localizations.name}>(context, ${localizations.name})!.labels',
           )
           ..requiredParameters.add(
             Parameter(
@@ -198,7 +198,7 @@ class DartBuilder {
           result.write('\'' + _excapeString(translation.value) + '\'');
         } else {
           final functionArgs =
-              x.templatedValues.map((x) => x.normalizedKey).join(', ');
+              x.templatedValues.map((x) => 'required ${x.normalizedKey}').join(', ');
 
           // We replace all occurences of `{{original_key}}` by `$originalKey`
           result.write('(\{$functionArgs\}) => ' +
@@ -210,7 +210,7 @@ class DartBuilder {
 
         if (x.templatedValues.isNotEmpty) {
           functionArgs += ', {' +
-              x.templatedValues.map((x) => x.normalizedKey).join(', ') +
+              x.templatedValues.map((x) => 'required ${x.normalizedKey}').join(', ') +
               '}';
         }
 
@@ -315,12 +315,14 @@ class DartBuilder {
         final argName = name.replaceFirst('_', '');
         constructor.optionalParameters.add(Parameter((p) => p
           ..name = argName
+          ..required = true
           ..type = refer(type)
           ..named = true));
         constructor.initializers.add(Code('$name = $argName'));
       } else {
         constructor.optionalParameters.add(Parameter((p) => p
           ..name = name
+          ..required = true
           ..named = true
           ..toThis = true));
       }
@@ -363,7 +365,7 @@ class DartBuilder {
           if (functionArguments.isNotEmpty) functionArguments += ',';
           functionArguments += '{' +
               label.templatedValues
-                  .map((x) => '@required ${x.type} ${x.normalizedKey}')
+                  .map((x) => 'required ${x.type} ${x.normalizedKey}')
                   .join(', ') +
               '}';
         }
@@ -407,9 +409,7 @@ class DartBuilder {
                       ..name = x.normalizedKey
                       ..named = true
                       ..type = refer(x.type)
-                      ..annotations.add(
-                        refer('required'),
-                      ),
+                      ..required = true,
                   ),
                 ),
               ),

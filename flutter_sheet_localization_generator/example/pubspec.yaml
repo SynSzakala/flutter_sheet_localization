@@ -14,16 +14,16 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
   flutter_sheet_localization:
+  flutter:
+    sdk: flutter
   flutter_localizations:
     sdk: flutter
-  flutter:
-    sdk: flutter 
   cupertino_icons: ^0.1.2
-  intl: ^0.16.1
+  intl: 0.17.0-nullsafety.2
 
 dev_dependencies: 
   flutter_test:
