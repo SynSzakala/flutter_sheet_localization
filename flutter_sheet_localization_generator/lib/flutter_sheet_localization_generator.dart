@@ -65,7 +65,7 @@ class SheetLocalizationGenerator
     log.info('Downloading csv from Google sheet url "$url" ...');
 
     var response =
-        await http.get(url, headers: {'accept': 'text/csv;charset=UTF-8'});
+        await http.get(Uri.parse(url), headers: {'accept': 'text/csv;charset=UTF-8'});
 
     log.fine('Google sheet csv:\n ${response.body}');
 
